@@ -2,9 +2,12 @@
   "name": "my-app",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://mrinalchaturvedi27.github.io/MY-PORTFOLIO",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -59,6 +62,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
+    "gh-pages": "^6.1.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
