@@ -460,7 +460,6 @@ function App() {
   "name": "Mrinal Chaturvedi",
   "location": "IIT Kanpur, India",
   "education": "B.Tech (Civil Engg.)",
-  "cpi": "7.9/10",
   "interests": [
     "Machine Learning",
     "Deep Learning",
@@ -468,10 +467,6 @@ function App() {
     "Computer Vision",
     "Sign Language Translation"
   ],
-  "achievements": {
-    "jee_advanced": "AIR 5993/1.8L+",
-    "jee_mains": "AIR 7575/1.1M+"
-  },
   "status": "building neural networks..."
 }`}
                 </pre>
