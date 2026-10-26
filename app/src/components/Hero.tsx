@@ -4,16 +4,24 @@ import { profile, stats } from '@/data'
 import type { SiteActions } from '@/actions'
 import { TerminalShell } from './TerminalShell'
 
-const asciiName = `███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ██╗
+const asciiName = `
+███╗   ███╗██████╗ ██╗███╗   ██╗ █████╗ ██╗
 ████╗ ████║██╔══██╗██║████╗  ██║██╔══██╗██║
 ██╔████╔██║██████╔╝██║██╔██╗ ██║███████║██║
 ██║╚██╔╝██║██╔══██╗██║██║╚██╗██║██╔══██║██║
 ██║ ╚═╝ ██║██║  ██║██║██║ ╚████║██║  ██║███████╗
-╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝`
+╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
 
-const prompt = 'whoami'
+ ██████╗██╗  ██╗ █████╗ ████████╗██╗   ██╗██████╗ ██╗   ██╗███████╗██████╗ ██╗
+██╔════╝██║  ██║██╔══██╗╚══██╔══╝██║   ██║██╔══██╗██║   ██║██╔════╝██╔══██╗██║
+██║     ███████║███████║   ██║   ██║   ██║██████╔╝██║   ██║█████╗  ██║  ██║██║
+██║     ██╔══██║██╔══██║   ██║   ██║   ██║██╔══██╗╚██╗ ██╔╝██╔══╝  ██║  ██║██║
+╚██████╗██║  ██║██║  ██║   ██║   ╚██████╔╝██║  ██║ ╚████╔╝ ███████╗██████╔╝██║
+ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═════╝ ╚═╝
+`
 
-function useTyped(text: string, delay = 70) {
+// Types the ASCII name one character at a time (instant with reduced motion)
+function useTyped(text: string, delay = 10) {
   const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const [count, setCount] = useState(reduced ? text.length : 0)
   useEffect(() => {
@@ -25,29 +33,23 @@ function useTyped(text: string, delay = 70) {
 }
 
 export function Hero({ actions }: { actions: SiteActions }) {
-  const { typed, done } = useTyped(prompt)
+  const { typed, done } = useTyped(asciiName)
 
   return (
-    <section id="home" className="px-4 pb-16 pt-12 sm:px-6 lg:px-12 lg:pt-16">
+    <section id="home" className="px-4 pb-16 pt-10 sm:px-6 lg:px-12 lg:pt-14">
       <div className="mx-auto max-w-4xl">
-        <p className="text-sm text-fg-muted">
-          <span className="text-accent">~</span> $ {typed}
-          {!done && <span className="cursor-blink text-accent">▋</span>}
-        </p>
-
-        <div className={`transition-opacity duration-500 ${done ? 'opacity-100' : 'opacity-0'}`}>
+        <h1 className="sr-only">{profile.name}</h1>
+        <div className="overflow-hidden text-center">
           <pre
             aria-hidden="true"
-            className="text-glow mt-6 hidden whitespace-pre font-mono text-[11px] leading-tight text-accent md:block lg:text-xs xl:text-sm"
+            className="ascii-art animate-glow-pulse inline-block text-left text-[5.5px] text-accent min-[400px]:text-[7px] sm:text-[9px] md:text-[11px] xl:text-sm"
           >
-            {asciiName}
+            {typed}
+            {!done && <span className="animate-pulse">_</span>}
           </pre>
-          <h1 className="mt-4 text-3xl font-bold text-fg md:mt-5 md:text-2xl">
-            <span className="md:hidden">{profile.name}</span>
-            <span className="hidden md:inline">
-              {profile.name.split(' ')[0]} <span className="text-accent">{profile.name.split(' ')[1]}</span>
-            </span>
-          </h1>
+        </div>
+
+        <div className={`transition-opacity duration-700 ${done ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
           <p className="mt-2 text-base text-accent">{profile.tagline}</p>
           <p className="mt-4 max-w-2xl leading-relaxed text-fg-muted">{profile.pitch}</p>
 
