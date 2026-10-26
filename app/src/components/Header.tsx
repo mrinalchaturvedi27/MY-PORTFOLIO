@@ -1,4 +1,4 @@
-import { Code2, FileText, Moon, Search, Sun } from 'lucide-react'
+import { Code2, Mail, Moon, Search, Sun } from 'lucide-react'
 import type { Theme } from '@/hooks/useTheme'
 import { profile } from '@/data'
 
@@ -6,11 +6,12 @@ type Props = {
   theme: Theme
   onThemeChange: (theme: Theme) => void
   onOpenPalette: () => void
+  onContact: () => void
 }
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform)
 
-export function Header({ theme, onThemeChange, onOpenPalette }: Props) {
+export function Header({ theme, onThemeChange, onOpenPalette, onContact }: Props) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 h-[60px] border-b bg-bg/90 backdrop-blur">
       <div className="flex h-full items-center justify-between gap-3 px-4 lg:px-6">
@@ -55,15 +56,13 @@ export function Header({ theme, onThemeChange, onOpenPalette }: Props) {
             ))}
           </div>
 
-          <a
-            href={profile.resume}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={onContact}
             className="flex items-center gap-2 rounded-md border border-accent px-3 py-1.5 text-xs font-medium text-accent transition-all hover:bg-accent/10 hover:shadow-glow"
           >
-            <FileText className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Résumé</span>
-          </a>
+            <Mail className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Get in Touch</span>
+          </button>
         </div>
       </div>
     </header>

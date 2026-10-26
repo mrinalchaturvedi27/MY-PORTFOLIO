@@ -1,13 +1,15 @@
-import { Briefcase, ChevronRight, Code2, FolderGit2, Send, Terminal, User } from 'lucide-react'
+import { Briefcase, ChevronRight, Code2, FlaskConical, FolderGit2, GitPullRequest, Send, Terminal, User } from 'lucide-react'
 import { navItems, profile, type SectionId } from '@/data'
 import { scrollToSection } from '@/hooks/useActiveSection'
 
 const icons: Record<SectionId, typeof Terminal> = {
   home: Terminal,
-  about: User,
   experience: Briefcase,
-  skills: Code2,
+  opensource: GitPullRequest,
   projects: FolderGit2,
+  research: FlaskConical,
+  skills: Code2,
+  about: User,
   contact: Send,
 }
 
@@ -55,7 +57,7 @@ export function MobileNav({ active }: { active: string }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-bg/95 backdrop-blur lg:hidden">
       <div className="flex items-center justify-around px-1 py-1.5">
-        {navItems.map(({ id, label }) => {
+        {navItems.filter((n) => n.mobile).map(({ id, label }) => {
           const Icon = icons[id]
           return (
             <button
@@ -67,7 +69,7 @@ export function MobileNav({ active }: { active: string }) {
               }`}
             >
               <Icon className="h-5 w-5" />
-              <span className="text-[10px]">{label}</span>
+              <span className="whitespace-nowrap text-[9px]">{label === 'Open Source' ? 'OSS' : label}</span>
             </button>
           )
         })}

@@ -1,7 +1,7 @@
 import { Command } from 'cmdk'
-import { ArrowRight, Copy, FileText, Github, Linkedin, Mail, Monitor, Moon, Sparkles, Sun } from 'lucide-react'
+import { ArrowRight, Copy, GitPullRequest, Github, Linkedin, Mail, Monitor, Moon, Sparkles, Sun } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { navItems, profile, projects, repoUrl } from '@/data'
+import { allPrsUrl, navItems, profile, projects, repoUrl } from '@/data'
 import type { SiteActions } from '@/actions'
 import type { Theme } from '@/hooks/useTheme'
 
@@ -64,7 +64,6 @@ export function CommandPalette({ open, onOpenChange, actions, theme }: Props) {
         </Command.Group>
 
         <Command.Group heading="Actions" className={groupClass}>
-          <Item onSelect={run(actions.openResume)} icon={<FileText className="h-4 w-4" />}>Open résumé</Item>
           <Item onSelect={run(actions.copyEmail)} icon={<Copy className="h-4 w-4" />} hint={profile.email}>
             Copy email address
           </Item>
@@ -82,6 +81,7 @@ export function CommandPalette({ open, onOpenChange, actions, theme }: Props) {
         <Command.Group heading="Links" className={groupClass}>
           <Item onSelect={openUrl(profile.github)} icon={<Github className="h-4 w-4" />}>GitHub</Item>
           <Item onSelect={openUrl(profile.linkedin)} icon={<Linkedin className="h-4 w-4" />}>LinkedIn</Item>
+          <Item onSelect={openUrl(allPrsUrl)} icon={<GitPullRequest className="h-4 w-4" />}>Merged pull requests</Item>
         </Command.Group>
 
         <Command.Group heading="Projects" className={groupClass}>

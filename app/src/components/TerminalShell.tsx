@@ -1,28 +1,30 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
-import { experiences, navItems, profile, projects, repoUrl, skills, stats, type SectionId } from '@/data'
+import { competitions, navItems, prUrl, profile, projects, repoUrl, research, skills, stats, work, type PullRequest, type SectionId } from '@/data'
 import type { SiteActions } from '@/actions'
 
 type Line = { id: number; input?: string; output?: ReactNode }
 
 const files: Record<string, string> = {
   'about.md': 'about',
-  'experience.log': 'experience',
+  'work.log': 'work',
+  'opensource/': 'prs',
   'projects/': 'projects',
+  'research/': 'research',
   'skills.json': 'skills',
   'stats.txt': 'stats',
   'contact.sh': 'contact',
-  'resume.pdf': 'resume',
 }
 
 const commandHelp: [string, string][] = [
   ['whoami', 'who is this?'],
   ['about', 'short bio'],
-  ['experience', 'research & competitions'],
+  ['work', 'internships'],
+  ['prs', 'merged open-source PRs'],
   ['projects', 'things I have built'],
+  ['research', 'research & competitions'],
   ['skills', 'languages, frameworks, tools'],
   ['stats', 'headline numbers'],
   ['contact', 'how to reach me'],
-  ['resume', 'open my résumé'],
   ['ls / cat <file>', 'browse the "filesystem"'],
   ['goto <section>', 'scroll to a section'],
   ['theme <dark|light>', 'switch theme'],
@@ -31,7 +33,7 @@ const commandHelp: [string, string][] = [
 ]
 
 const commandNames = [
-  'help', 'whoami', 'about', 'experience', 'projects', 'skills', 'stats', 'contact', 'resume',
+  'help', 'whoami', 'about', 'work', 'prs', 'research', 'projects', 'skills', 'stats', 'contact', 'git',
   'ls', 'cat', 'goto', 'theme', 'crt', 'clear', 'github', 'linkedin', 'email', 'echo', 'date',
   'history', 'matrix', 'sudo',
 ]
@@ -54,7 +56,7 @@ const welcome: Line = {
   ),
 }
 
-export function TerminalShell({ actions }: { actions: SiteActions }) {
+export function TerminalShell({ actions, prs }: { actions: SiteActions; prs: PullRequest[] }) {
   const [lines, setLines] = useState<Line[]>([welcome])
   const [input, setInput] = useState('')
   const [history, setHistory] = useState<string[]>([])
@@ -67,6 +69,9 @@ export function TerminalShell({ actions }: { actions: SiteActions }) {
     const el = scrollRef.current
     if (el) el.scrollTop = el.scrollHeight
   }, [lines])
+
+  const fill = (text: string) =>
+    text.replace('{prs}', `${prs.length}`).replace('{repos}', `${new Set(prs.map((p) => p.repo)).size}`)
 
   const run = (raw: string): ReactNode | 'clear' => {
     const [cmd = '', ...args] = raw.trim().split(/\s+/)
@@ -94,16 +99,52 @@ export function TerminalShell({ actions }: { actions: SiteActions }) {
         )
       case 'about':
         return profile.pitch
+      case 'work':
       case 'experience':
       case 'exp':
         return (
           <ul>
-            {experiences.map((e) => (
+            {work.map((e) => (
               <li key={e.hash}>
                 <span className="text-warn">{e.hash}</span> {e.title} <span className="text-fg-muted">({e.period})</span>
               </li>
             ))}
           </ul>
+        )
+      case 'research':
+        return (
+          <ul>
+            {research.map((e) => (
+              <li key={e.hash}>
+                <span className="text-warn">{e.hash}</span> {e.title} <span className="text-fg-muted">({e.period})</span>
+              </li>
+            ))}
+            {competitions.map((c) => (
+              <li key={c.title}>
+                <Accent>🏆</Accent> {c.title} <span className="text-fg-muted">— {c.result}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      case 'prs':
+      case 'opensource':
+      case 'git':
+        if (cmd.toLowerCase() === 'git' && !/^log\b/.test(arg)) return 'usage: git log  (lists merged open-source PRs)'
+        return (
+          <div>
+            <p className="text-fg-muted">
+              {prs.length} merged PRs across {new Set(prs.map((p) => p.repo)).size} projects (latest first):
+            </p>
+            <ul>
+              {prs.slice(0, 12).map((pr) => (
+                <li key={pr.repo + pr.number}>
+                  <span className="text-warn">{pr.mergedAt}</span> <span className="text-accent-2">{pr.repo.split('/')[1]}</span>{' '}
+                  <Link href={prUrl(pr)}>{pr.title}</Link>
+                </li>
+              ))}
+            </ul>
+            {prs.length > 12 && <p className="text-fg-muted">… run goto opensource for the rest</p>}
+          </div>
         )
       case 'projects':
         return (
@@ -131,7 +172,7 @@ export function TerminalShell({ actions }: { actions: SiteActions }) {
           <ul>
             {stats.map((s) => (
               <li key={s.value}>
-                <Accent>{s.value.padEnd(7)}</Accent> {s.label}
+                <Accent>{fill(s.value).padEnd(7)}</Accent> {fill(s.label)}
               </li>
             ))}
           </ul>
@@ -145,8 +186,11 @@ export function TerminalShell({ actions }: { actions: SiteActions }) {
           </ul>
         )
       case 'resume':
-        actions.openResume()
-        return 'Opening résumé in a new tab…'
+        return (
+          <span>
+            Résumé available on request — <Link href={`mailto:${profile.email}`}>{profile.email}</Link>
+          </span>
+        )
       case 'github':
         window.open(profile.github, '_blank', 'noopener')
         return 'Opening GitHub…'

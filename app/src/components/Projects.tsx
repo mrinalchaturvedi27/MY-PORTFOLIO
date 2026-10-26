@@ -37,12 +37,12 @@ export function Projects() {
   const repos = useGithubRepos(profile.githubUser)
 
   const visible = filter === 'All' ? projects : projects.filter((p) => p.category === filter)
-  const info = (p: Project) => repos[p.repo.toLowerCase()]
+  const info = (p: Project) => (p.repo.includes('/') ? undefined : repos[p.repo.toLowerCase()])
 
   return (
-    <section id="projects" className="px-4 py-20 sm:px-6 lg:px-12">
+    <section id="projects" className="bg-bg-2 px-4 py-20 sm:px-6 lg:px-12">
       <div className="mx-auto max-w-4xl">
-        <SectionHeading command="ls ~/projects" title="Featured Projects" />
+        <SectionHeading command="ls ~/projects" title="Projects" />
 
         <div className="mb-6 flex flex-wrap gap-2" role="tablist" aria-label="Filter projects">
           {projectCategories.map((cat) => {
@@ -68,7 +68,7 @@ export function Projects() {
           {visible.map((project) => (
             <article
               key={project.repo}
-              className="group flex flex-col rounded-lg border bg-bg-2 p-5 transition-colors hover:border-accent/50"
+              className="group flex flex-col rounded-lg border bg-bg p-5 transition-colors hover:border-accent/50"
             >
               <div className="mb-3 flex items-start justify-between">
                 <span className="flex h-9 w-9 items-center justify-center rounded-md bg-bg-3">
@@ -85,10 +85,16 @@ export function Projects() {
                 </button>
               </h3>
               <p className="mt-2 flex-1 text-sm text-fg-muted">{project.description}</p>
+              {project.metric && (
+                <p className="mt-3 text-xs font-medium text-accent">
+                  <span className="opacity-60">→ </span>
+                  {project.metric}
+                </p>
+              )}
 
               <ul className="mt-4 flex flex-wrap gap-1.5">
                 {project.tech.map((t) => (
-                  <li key={t} className="rounded bg-bg px-2 py-0.5 text-xs text-fg-muted">
+                  <li key={t} className="rounded bg-bg-2 px-2 py-0.5 text-xs text-fg-muted">
                     {t}
                   </li>
                 ))}
@@ -135,7 +141,7 @@ export function Projects() {
             {selected && (
               <>
                 <div className="flex items-center justify-between border-b bg-bg-3 px-4 py-2 text-xs text-fg-muted">
-                  <span>~/projects/{selected.repo}</span>
+                  <span>~/projects/{selected.repo.split('/').pop()}</span>
                   <Dialog.Close className="rounded p-1 hover:text-fg" aria-label="Close">
                     <X className="h-4 w-4" />
                   </Dialog.Close>
@@ -146,6 +152,17 @@ export function Projects() {
                   <Dialog.Description className="mt-3 text-sm leading-relaxed text-fg-muted">
                     {selected.description}
                   </Dialog.Description>
+
+                  {selected.highlights && (
+                    <ul className="mt-4 space-y-1.5">
+                      {selected.highlights.map((h) => (
+                        <li key={h} className="flex gap-2 text-sm text-fg">
+                          <span className="mt-px text-accent">+</span>
+                          <span>{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                   <h4 className="mt-5 text-xs font-semibold uppercase tracking-wider text-fg-muted">Stack</h4>
                   <ul className="mt-2 flex flex-wrap gap-1.5">

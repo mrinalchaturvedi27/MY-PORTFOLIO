@@ -17,8 +17,8 @@ export function Contact({ onCopyEmail, copied }: Props) {
         <SectionHeading command="./contact.sh" title="Get in Touch" />
 
         <p className="max-w-xl text-base leading-relaxed text-fg-muted">
-          I'm always open to discussing machine learning research, collaborations, or opportunities in AI/ML and
-          quantitative finance. The fastest way to reach me is email.
+          I'm open to software engineering and ML roles, open-source collaborations, and research conversations. The
+          fastest way to reach me is email.
         </p>
 
         <div className="mt-8 flex flex-wrap items-stretch gap-3">

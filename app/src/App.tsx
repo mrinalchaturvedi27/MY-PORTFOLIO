@@ -2,12 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { navItems, profile } from '@/data'
 import type { SiteActions } from '@/actions'
 import { useTheme } from '@/hooks/useTheme'
+import { useOpenSource } from '@/hooks/useOpenSource'
 import { scrollToSection, useActiveSection } from '@/hooks/useActiveSection'
 import { Header } from '@/components/Header'
 import { MobileNav, Sidebar } from '@/components/Navigation'
 import { Hero } from '@/components/Hero'
 import { About } from '@/components/About'
-import { Experience } from '@/components/Experience'
+import { Work } from '@/components/Work'
+import { OpenSource } from '@/components/OpenSource'
+import { Research } from '@/components/Research'
 import { Skills } from '@/components/Skills'
 import { Projects } from '@/components/Projects'
 import { Contact } from '@/components/Contact'
@@ -20,6 +23,7 @@ const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'Ar
 function App() {
   const { theme, setTheme } = useTheme()
   const active = useActiveSection(sectionIds)
+  const prs = useOpenSource(profile.githubUser)
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [matrix, setMatrix] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
@@ -49,7 +53,6 @@ function App() {
           () => showToast(profile.email),
         )
       },
-      openResume: () => window.open(profile.resume, '_blank', 'noopener'),
       runMatrix: () => {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           showToast('Matrix disabled: reduced motion is on')
@@ -88,22 +91,29 @@ function App() {
   return (
     <div className="min-h-screen bg-bg text-fg">
       <a
-        href="#about"
+        href="#experience"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-accent focus:px-3 focus:py-2 focus:text-bg"
       >
         Skip to content
       </a>
 
-      <Header theme={theme} onThemeChange={setTheme} onOpenPalette={() => setPaletteOpen(true)} />
+      <Header
+        theme={theme}
+        onThemeChange={setTheme}
+        onOpenPalette={() => setPaletteOpen(true)}
+        onContact={() => scrollToSection('contact')}
+      />
       <Sidebar active={active} />
       <MobileNav active={active} />
 
       <main className="pb-16 pt-[60px] lg:ml-[260px] lg:pb-0">
-        <Hero actions={actions} />
-        <About />
-        <Experience />
-        <Skills />
+        <Hero actions={actions} prs={prs} />
+        <Work />
+        <OpenSource prs={prs} />
         <Projects />
+        <Research />
+        <Skills />
+        <About />
         <Contact onCopyEmail={actions.copyEmail} copied={emailCopied} />
       </main>
 

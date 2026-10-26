@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { ArrowDown, FileText, Github, Linkedin, Mail } from 'lucide-react'
-import { profile, stats } from '@/data'
+import { ArrowDown, Briefcase, Github, Linkedin, Mail } from 'lucide-react'
+import { profile, stats, type PullRequest } from '@/data'
 import type { SiteActions } from '@/actions'
 import { TerminalShell } from './TerminalShell'
 
@@ -32,8 +32,10 @@ function useTyped(text: string, delay = 10) {
   return { typed: text.slice(0, count), done: count >= text.length }
 }
 
-export function Hero({ actions }: { actions: SiteActions }) {
+export function Hero({ actions, prs }: { actions: SiteActions; prs: PullRequest[] }) {
   const { typed, done } = useTyped(asciiName)
+  const fill = (text: string) =>
+    text.replace('{prs}', `${prs.length}`).replace('{repos}', `${new Set(prs.map((p) => p.repo)).size}`)
 
   return (
     <section id="home" className="px-4 pb-16 pt-10 sm:px-6 lg:px-12 lg:pt-14">
@@ -65,15 +67,13 @@ export function Hero({ actions }: { actions: SiteActions }) {
           </ul>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <a
-              href={profile.resume}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => actions.navigate('experience')}
               className="flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-bg transition-shadow hover:shadow-glow"
             >
-              <FileText className="h-4 w-4" />
-              View Résumé
-            </a>
+              <Briefcase className="h-4 w-4" />
+              See my work
+            </button>
             <button
               onClick={() => actions.navigate('contact')}
               className="flex items-center gap-2 rounded-md border border-accent px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/10"
@@ -93,10 +93,10 @@ export function Hero({ actions }: { actions: SiteActions }) {
 
           <dl className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-lg border bg-line md:grid-cols-4">
             {stats.map((s) => (
-              <div key={s.value} className="bg-bg-2 p-4">
-                <dt className="sr-only">{s.label}</dt>
-                <dd className="text-xl font-bold text-accent">{s.value}</dd>
-                <dd className="mt-1 text-xs leading-snug text-fg-muted">{s.label}</dd>
+              <div key={s.label} className="bg-bg-2 p-4">
+                <dt className="sr-only">{fill(s.label)}</dt>
+                <dd className="text-xl font-bold text-accent">{fill(s.value)}</dd>
+                <dd className="mt-1 text-xs leading-snug text-fg-muted">{fill(s.label)}</dd>
               </div>
             ))}
           </dl>
@@ -105,11 +105,11 @@ export function Hero({ actions }: { actions: SiteActions }) {
             <p className="mb-2 text-xs text-fg-muted">
               Prefer the command line? Try <code className="text-accent">help</code> below.
             </p>
-            <TerminalShell actions={actions} />
+            <TerminalShell actions={actions} prs={prs} />
           </div>
 
           <button
-            onClick={() => actions.navigate('about')}
+            onClick={() => actions.navigate('experience')}
             className="animate-float mx-auto mt-10 flex flex-col items-center gap-1 text-xs text-fg-muted hover:text-fg"
           >
             Scroll to explore

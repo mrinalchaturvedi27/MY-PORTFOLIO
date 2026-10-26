@@ -7,7 +7,6 @@ export type SiteActions = {
   setTheme: (theme: Theme) => void
   toggleCrt: () => void
   copyEmail: () => void
-  openResume: () => void
   runMatrix: () => void
   openPalette: () => void
 }

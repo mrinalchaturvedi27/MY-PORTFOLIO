@@ -1,49 +1,46 @@
-import { profile } from '@/data'
+import { Users } from 'lucide-react'
+import { leadership, profile } from '@/data'
 import { SectionHeading } from './SectionHeading'
 
 const aboutJson = `{
   "name": "${profile.name}",
   "location": "${profile.location}",
-  "education": "B.Tech (Civil Engg.)",
-  "interests": [
-    "Machine Learning",
-    "Vision-Language Models",
-    "Sign Language Translation",
-    "Quantitative Finance",
-    "Computer Vision"
+  "education": "B.Tech, Civil Engineering",
+  "focus": [
+    "Systems & performance (C++)",
+    "Cloud-native infra (Kubernetes)",
+    "Open source",
+    "ML research & MLOps"
   ],
-  "status": "building neural networks..."
+  "status": "shipping PRs..."
 }`
 
 export function About() {
   return (
-    <section id="about" className="bg-bg-2 px-4 py-20 sm:px-6 lg:px-12">
+    <section id="about" className="px-4 py-20 sm:px-6 lg:px-12">
       <div className="mx-auto max-w-4xl">
         <SectionHeading command="cat about.md" title="About Me" />
 
         <div className="grid items-start gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-          <pre className="scrollbar-thin overflow-x-auto rounded-lg border bg-bg p-5 text-xs leading-relaxed text-accent">
+          <pre className="scrollbar-thin overflow-x-auto rounded-lg border bg-bg-2 p-5 text-xs leading-relaxed text-accent">
             {aboutJson}
           </pre>
 
           <div className="space-y-4 leading-relaxed text-fg">
             <p>
-              I'm an undergraduate at IIT Kanpur working at the intersection of machine learning, systems, and applied
-              AI. I enjoy going beyond high-level abstractions — building models end-to-end and understanding how things
-              work under the hood.
+              I'm a final-year undergraduate at IIT Kanpur who likes understanding software all the way down — from cache
+              lines and SIMD in a C++ GEMM kernel, to job queues and storage engines, to the Kubernetes clusters that run
+              everything.
             </p>
             <p>
-              My experience spans computer vision, vision-language models, and real-time ML systems. I've worked on sign
-              language translation, spatial audio localization, medical imaging pipelines, and quantitative finance using
-              Python, C++, PyTorch, and TensorFlow.
+              Most of my recent work is in open source: I interned with the Linux Foundation (CNCF) on Krkn-AI, and I've
+              had pull requests merged into WasmEdge, DIPY, mlpack and others. On the ML side I do research on sign
+              language translation and build MLOps pipelines that actually get deployed and monitored.
             </p>
-            <p>
-              I contribute to open-source projects, take part in competitive programming and data science competitions,
-              and like building tools that balance algorithmic efficiency with real-world impact.
-            </p>
+            <p>I like work I can measure: benchmarks, metrics, and merged PRs.</p>
 
             <div className="flex flex-wrap gap-2 pt-2">
-              {['ML Researcher', 'Competitive Programmer', 'Open Source'].map((tag) => (
+              {['Systems', 'Open Source', 'Cloud Native', 'ML'].map((tag) => (
                 <span key={tag} className="rounded-full border border-accent/30 bg-accent/5 px-3 py-1 text-xs text-accent">
                   {tag}
                 </span>
@@ -51,6 +48,21 @@ export function About() {
             </div>
           </div>
         </div>
+
+        <h3 className="mb-4 mt-14 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-fg-muted">
+          <Users className="h-4 w-4" />
+          Leadership
+        </h3>
+        <ul className="grid gap-4 md:grid-cols-3">
+          {leadership.map((l) => (
+            <li key={l.org} className="rounded-lg border bg-bg-2 p-4">
+              <p className="text-xs text-fg-muted">{l.period}</p>
+              <p className="mt-1 text-sm font-semibold text-fg">{l.role}</p>
+              <p className="text-xs text-accent">{l.org}</p>
+              <p className="mt-2 text-xs leading-relaxed text-fg-muted">{l.detail}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )
