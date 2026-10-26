@@ -61,17 +61,6 @@ export const work: Experience[] = [
       'Merged 8 PRs upstream during the internship: auto-enabled scenarios 4 → 10, returned query series 27 → 4, query catalog expanded to 22',
     ],
   },
-  {
-    hash: '9e07b3d',
-    title: 'Proxmed Pty Ltd',
-    role: 'ML Intern · Medical Image Segmentation',
-    period: 'Jun 2025 – Jul 2025',
-    description: [
-      'Built a brain tumor segmentation pipeline with MONAI on the BraTS dataset for 3D MRI segmentation',
-      'Preprocessed multi-modal MRI scans (T1, T1ce, T2, FLAIR) with Nibabel/MONAI for intensity normalization and resampling',
-      'Trained a 3D UNet in PyTorch + MONAI with Dice loss, reaching a 0.85 Dice score on tumor core, validated via Dice/IoU',
-    ],
-  },
 ]
 
 export const research: Experience[] = [
@@ -136,7 +125,7 @@ export const skills = [
   { category: 'Languages', items: ['C++', 'C', 'Python', 'SQL'] },
   { category: 'Systems & Performance', items: ['SIMD', 'Cache blocking', 'Multithreading', 'Benchmarking', 'CMake'] },
   { category: 'Backend & Infra', items: ['Kubernetes', 'Docker & Compose', 'Prometheus', 'FastAPI', 'PostgreSQL', 'Redis'] },
-  { category: 'ML & Data', items: ['PyTorch', 'Transformers', 'scikit-learn', 'LightGBM', 'MONAI', 'NumPy / Pandas', 'Optuna'] },
+  { category: 'ML & Data', items: ['PyTorch', 'Transformers', 'scikit-learn', 'LightGBM', 'NumPy / Pandas', 'Optuna'] },
   { category: 'MLOps', items: ['MLflow', 'Airflow', 'Evidently'] },
   { category: 'Tools', items: ['Git / GitHub', 'Linux', 'LaTeX'] },
 ]
